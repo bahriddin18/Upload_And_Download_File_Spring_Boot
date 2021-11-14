@@ -96,23 +96,21 @@ public class AttachmentController {
     public boolean saveMultiple(MultipartHttpServletRequest request) throws IOException {
         Iterator<String> fileNames = request.getFileNames();
         while (fileNames.hasNext()) {
-            while (fileNames.hasNext()) {
 
-                MultipartFile file = request.getFile(fileNames.next());
-                if (file != null) {
-                    String originalFilename = file.getOriginalFilename();
-                    Attachment attachment = new Attachment();
-                    attachment.setName(originalFilename);
-                    attachment.setSize(file.getSize());
-                    attachment.setType(file.getContentType());
-                    attachment.setKiritilganName(originalFilename);
+            MultipartFile file = request.getFile(fileNames.next());
+            if (file != null) {
+                String originalFilename = file.getOriginalFilename();
+                Attachment attachment = new Attachment();
+                attachment.setName(originalFilename);
+                attachment.setSize(file.getSize());
+                attachment.setType(file.getContentType());
+                attachment.setKiritilganName(originalFilename);
 
-                    attachmentRepository.save(attachment);
-                    Path path = Paths.get(uploadDirectorys + "/" + originalFilename);
-                    Files.copy(file.getInputStream(), path);
-                } else {
-                    return false;
-                }
+                attachmentRepository.save(attachment);
+                Path path = Paths.get(uploadDirectorys + "/" + originalFilename);
+                Files.copy(file.getInputStream(), path);
+            } else {
+                return false;
             }
         }
 
