@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+
 import com.example.demo.entity.ApiResponse;
 import com.example.demo.entity.Attachment;
 import com.example.demo.entity.AttachmentContent;
@@ -95,22 +96,26 @@ public class AttachmentController {
     public boolean saveMultiple(MultipartHttpServletRequest request) throws IOException {
         Iterator<String> fileNames = request.getFileNames();
         while (fileNames.hasNext()) {
-            MultipartFile file = request.getFile(fileNames.next());
-            if (file != null) {
-                String originalFilename = file.getOriginalFilename();
-                Attachment attachment = new Attachment();
-                attachment.setName(originalFilename);
-                attachment.setSize(file.getSize());
-                attachment.setType(file.getContentType());
-                attachment.setKiritilganName(originalFilename);
+            while (fileNames.hasNext()) {
 
-                attachmentRepository.save(attachment);
-                Path path = Paths.get(uploadDirectorys + "/" + originalFilename);
-                Files.copy(file.getInputStream(), path);
-            } else {
-                return false;
+                MultipartFile file = request.getFile(fileNames.next());
+                if (file != null) {
+                    String originalFilename = file.getOriginalFilename();
+                    Attachment attachment = new Attachment();
+                    attachment.setName(originalFilename);
+                    attachment.setSize(file.getSize());
+                    attachment.setType(file.getContentType());
+                    attachment.setKiritilganName(originalFilename);
+
+                    attachmentRepository.save(attachment);
+                    Path path = Paths.get(uploadDirectorys + "/" + originalFilename);
+                    Files.copy(file.getInputStream(), path);
+                } else {
+                    return false;
+                }
             }
         }
+
         return true;
     }
 
